@@ -6,8 +6,6 @@ import 'package:house_finder/theme.dart';
 class PropertyCard extends StatelessWidget {
   final Property property;
 
-  PropertyCard(this.property);
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
