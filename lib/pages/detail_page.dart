@@ -60,7 +60,7 @@ class DetailPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Kuretakeso Hott',
+                                  property.name,
                                   style: blackTextStyle.copyWith(
                                     fontSize: 16,
                                   ),
