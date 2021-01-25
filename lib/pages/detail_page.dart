@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:house_finder/models/property.dart';
 import 'package:house_finder/theme.dart';
 import 'package:house_finder/widgets/facility_item.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailPage extends StatelessWidget {
+  final Property property;
+
+  DetailPage(this.property);
   @override
   Widget build(BuildContext context) {
     launchUrl(String url) async {
@@ -19,8 +23,8 @@ class DetailPage extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            Image.asset(
-              'assets/images/property1.png',
+            Image.network(
+              property.imageUrl,
               width: MediaQuery.of(context).size.width,
               height: 350.0,
               fit: BoxFit.cover,
