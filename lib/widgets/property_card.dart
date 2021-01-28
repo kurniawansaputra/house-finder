@@ -45,10 +45,9 @@ class PropertyCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.star,
-                            color: yellowColor,
-                            size: 16,
+                          Image.asset(
+                            'assets/images/icon_star.png',
+                            width: 18.0,
                           ),
                           Text(
                             '${property.rating}/5',

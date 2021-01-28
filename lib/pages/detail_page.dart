@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:house_finder/models/property.dart';
+import 'package:house_finder/pages/error_page.dart';
 import 'package:house_finder/theme.dart';
 import 'package:house_finder/widgets/facility_item.dart';
+import 'package:house_finder/widgets/rating_item.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailPage extends StatelessWidget {
@@ -14,7 +16,12 @@ class DetailPage extends StatelessWidget {
       if (await canLaunch(url)) {
         launch(url);
       } else {
-        throw (url);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ErrorPage(),
+          ),
+        );
       }
     }
 
@@ -70,7 +77,7 @@ class DetailPage extends StatelessWidget {
                                 ),
                                 Text.rich(
                                   TextSpan(
-                                    text: '\$52',
+                                    text: '\$${property.price}',
                                     style: purpleTextStyle.copyWith(
                                       fontSize: 16.0,
                                     ),
@@ -87,33 +94,14 @@ class DetailPage extends StatelessWidget {
                               ],
                             ),
                             Row(
-                              children: [
-                                Icon(
-                                  Icons.star,
-                                  color: yellowColor,
-                                  size: 16,
-                                ),
-                                Icon(
-                                  Icons.star,
-                                  color: yellowColor,
-                                  size: 16,
-                                ),
-                                Icon(
-                                  Icons.star,
-                                  color: yellowColor,
-                                  size: 16,
-                                ),
-                                Icon(
-                                  Icons.star,
-                                  color: yellowColor,
-                                  size: 16,
-                                ),
-                                Icon(
-                                  Icons.star,
-                                  color: Color(0xff989BA1),
-                                  size: 16,
-                                ),
-                              ],
+                              children: [1, 2, 3, 4, 5].map((index) {
+                                return Container(
+                                  child: RatingItem(
+                                    index: index,
+                                    rating: property.rating,
+                                  ),
+                                );
+                              }).toList(),
                             ),
                           ],
                         ),
@@ -142,17 +130,17 @@ class DetailPage extends StatelessWidget {
                             FacilityItem(
                               name: 'Kitchen',
                               imageUrl: 'assets/images/kitchen.png',
-                              total: 2,
+                              total: property.numberOfKithens,
                             ),
                             FacilityItem(
                               name: 'Bedroom',
                               imageUrl: 'assets/images/bed.png',
-                              total: 4,
+                              total: property.numberOfBedrooms,
                             ),
                             FacilityItem(
                               name: 'Cupboard',
                               imageUrl: 'assets/images/cupboard.png',
-                              total: 4,
+                              total: property.numberOfCupboards,
                             )
                           ],
                         ),
@@ -177,47 +165,26 @@ class DetailPage extends StatelessWidget {
                         height: 88.0,
                         child: ListView(
                           scrollDirection: Axis.horizontal,
-                          children: [
-                            SizedBox(
-                              width: margin,
-                            ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(16.0),
-                              child: Image.asset(
-                                'assets/images/property1.png',
-                                width: 110.0,
-                                height: 88.0,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            SizedBox(
-                              width: margin,
-                            ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(16.0),
-                              child: Image.asset(
-                                'assets/images/property1.png',
-                                width: 110.0,
-                                height: 88.0,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            SizedBox(
-                              width: margin,
-                            ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(16.0),
-                              child: Image.asset(
-                                'assets/images/property1.png',
-                                width: 110.0,
-                                height: 88.0,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            SizedBox(
-                              width: margin,
-                            ),
-                          ],
+                          children: property.photos.map(
+                            (item) {
+                              return Container(
+                                margin: EdgeInsets.only(
+                                  left: margin,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(
+                                    16.0,
+                                  ),
+                                  child: Image.network(
+                                    item,
+                                    width: 110.0,
+                                    height: 88.0,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              );
+                            },
+                          ).toList(),
                         ),
                       ),
                       SizedBox(
@@ -242,15 +209,14 @@ class DetailPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Jln. Kappan Sukses No. 20\nPalembang',
+                              property.address + '\n${property.country}',
                               style: greyTextStyle.copyWith(
                                 fontSize: 14.0,
                               ),
                             ),
                             InkWell(
                               onTap: () {
-                                launchUrl(
-                                    'https://www.google.com/maps/place/Jl.+Malioboro,+Sosromenduran,+Gedong+Tengen,+Kota+Yogyakarta,+Daerah+Istimewa+Yogyakarta/@-7.7926306,110.3636856,17z/data=!3m1!4b1!4m5!3m4!1s0x2e7a5825fa6106c5:0x3ea4c521a5ed1133!8m2!3d-7.7926359!4d110.3658743');
+                                launchUrl(property.mapUrl);
                               },
                               child: Image.asset(
                                 'assets/images/btn_place.png',
@@ -273,7 +239,7 @@ class DetailPage extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0)),
                           onPressed: () {
-                            launchUrl('tel:082320860429');
+                            launchUrl('tel:${property.phone}');
                           },
                           color: purpleColor,
                           child: Text(
